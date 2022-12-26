@@ -6,8 +6,10 @@ from picotui.widgets import *
 from picotui.defs import *
 from ascii_animals import ASCII_ANIMALS
 from ascii_starwars import ASCII_STARWARS
+from ascii_harry_potter import ASCII_HARRY_POTTER
 from ascii_fig import AsciiFig
-from practice import PractiseAddition, PractiseSubtraction, PractiseMultiplication, PractiseDivision, PractiseDivisionWithRemainder
+#import practice
+from practice import PracticeAddition, PracticeSubtraction, PracticeMultiplication, PracticeDivision, PracticeDivisionWithRemainder, PracticeComplementTo10 
 from random import randint 
 
 class MyMathTUI:
@@ -18,13 +20,16 @@ class MyMathTUI:
       { 'text' : "Addition",
         'default_range' : [ 0, 10 ],
         'input_box': WTextEntry( param_width, "0-10" ) },  
+      { 'text' : "Complement to 10",
+        'default_range' : [ 0, 10 ],
+        'input_box': WTextEntry( param_width, "0-10" ) },  
       { 'text' : "Subtraction", 
         'default_range' : [ 0, 10 ],
         'input_box': WTextEntry( param_width, "0-10" ) }, 
-      { 'text' : "Multiplication Table",
-        'default_range' : [ 1, 10 ],
-        'input_box': WTextEntry( param_width, "1-10" ) }, 
-      { 'text' : "Multiplication",
+      { 'text' : "Mult. Table [X] x [0-10]",
+        'default_range' : [ 2, 9 ],
+        'input_box': WTextEntry( param_width, "2-9" ) }, 
+      { 'text' : "Mult. [X] x [X]",
         'default_range' : [ 1, 10 ],
         'input_box': WTextEntry( param_width, "1-10" ) }, 
       { 'text' : "Division", 
@@ -35,7 +40,7 @@ class MyMathTUI:
         'input_box' : WTextEntry( param_width, "1-10" ) },
 ]
 #    self.practice_list = ["Addition", "Substraction",  "Multiplications", "Division", "Division with Remainder" ]
-    self.theme_list = ["animals", "star wars", "none"]
+    self.theme_list = ["animals", "star wars", "Harry Potter", "none"]
     self.launch()
 
   def get_practice( self, text:str ):
@@ -93,6 +98,8 @@ class MyMathTUI:
       db = ASCII_ANIMALS
     elif theme == "star wars":
       db = ASCII_STARWARS
+    elif theme == "Harry Potter":
+      db = ASCII_HARRY_POTTER
     elif theme == "none" :
       db = None
     if db == None:
@@ -121,7 +128,7 @@ class MyMathTUI:
 
       ## adding all input_box
       for p in [ p[ 'input_box' ] for p in self.practice_list ]:  
-        d.add( 30, line, p )
+        d.add( 40, line, p )
         line += 1
       line += 2
 
@@ -137,6 +144,11 @@ class MyMathTUI:
       line -= 1
       d.add( 20, line, "Number of Challenges:") 
       d.add( 42, line, input_challenge_nbr )
+
+      input_timeout = WTextEntry(4, "10")
+      line += 1
+      d.add( 20, line, "Timeout (s):") 
+      d.add( 42, line, input_timeout )
     
       line += 6
       b = WButton(8, "OK")
@@ -149,33 +161,33 @@ class MyMathTUI:
       res = d.loop()
     
     if res == ACTION_OK:
-      practice = self.practice_list[ input_practice.get() ]
+      training = self.practice_list[ input_practice.get() ]
       challenge_nbr =  self.check_int_input( input_challenge_nbr.get(), 20 )
       ascii_fig = self.get_ascii_fig( input_theme.get() )
-      user_range = self.get_range( practice )
+      user_range = self.get_range( training )
+      timeout = self.check_int_input( input_timeout.get(), None )
 
-      if practice[ 'text' ] == "Addition" :
-        PractiseAddition(y_range=user_range, x_range=user_range, \
-          challenge_nbr=challenge_nbr, ascii_fig=ascii_fig )
-      elif practice[ 'text' ] == "Subtraction" :
-        PractiseSubtraction(y_range=user_range, x_range=user_range, \
-          challenge_nbr=challenge_nbr, ascii_fig=ascii_fig )
-      elif practice[ 'text' ] == "Multiplication Table" :
-        PractiseMultiplication(y_range=user_range, x_range=[ 0, 10 ],\
-          challenge_nbr=challenge_nbr, ascii_fig=ascii_fig )
-      elif practice[ 'text' ] == "Multiplication" :
-        PractiseMultiplication(y_range=user_range, x_range=user_range,\
-          challenge_nbr=challenge_nbr, ascii_fig=ascii_fig )
-      elif practice[ 'text' ] == "Division" :
-        PractiseDivision(y_range=user_range, x_range=[ 0, 10 ],\
-          challenge_nbr=challenge_nbr, ascii_fig=ascii_fig )
-      elif practice[ 'text' ] == "Division With Remainder" :
-        PractiseDivisionWithRemainder(y_range=user_range, x_range=[ 0, 10 ],\
-          challenge_nbr=challenge_nbr, ascii_fig=ascii_fig )
-    
-     
+      args = { 'y_range' : user_range, 'x_range' : [ 0, 10 ], \
+               'challenge_nbr' : challenge_nbr, 'ascii_fig' : ascii_fig, \
+               'timeout' : timeout }
+      if training[ 'text' ] == "Addition" :
+        args[ 'x_range' ] = user_range
+        PracticeAddition( **args )
+      elif training[ 'text' ] == "Complement to 10" :
+        PracticeComplementTo10( **args )
+      elif training[ 'text' ] == "Subtraction" :
+        args[ 'x_range' ] = user_range
+        PracticeSubtraction( **args )
+      elif training[ 'text' ] == "Mult. Table [X] x [0-10]" :
+        PracticeMultiplication( **args )
+      elif training[ 'text' ] == "Mult. [X] x [X]" :
+        args[ 'x_range' ] = user_range
+        PracticeMultiplication( **args )
+      elif training[ 'text' ] == "Division" :
+        PracticeDivision( **args )
+      elif training[ 'text' ] == "Division With Remainder" :
+        PracticeDivisionWithRemainder( **args )
 
-if __name__ == "__main__":
+if __name__ == '__main__' :
   MyMathTUI()
-
 

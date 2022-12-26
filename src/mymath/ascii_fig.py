@@ -52,26 +52,26 @@ class AsciiFig:
     """ select randomly a figure that corresponds to the score. Score is between 0 and 100. 
         When score is set to None a random picture is selected.
     """
-    if score == None:
-      fig_list = self.db
-    else:
-      ## define the corresponding fig_score 
-      for fig_score in self.score_list:
-        if fig_score <= score:
-          break
-      fig_list = []
-      for meta in self.meta_list:
-        if meta[ 'score' ] == fig_score:
-          fig_list.append( self.db[ meta[ 'db_index' ] ] )  
+#    if score == None:
+#      fig_list = self.db
+#    else:
+#      ## define the corresponding fig_score 
+#      for fig_score in self.score_list:
+#        if fig_score <= score:
+#          break
+#      fig_list = []
+#      for meta in self.meta_list:
+#        if meta[ 'score' ] == fig_score:
+#          fig_list.append( self.db[ meta[ 'db_index' ] ] )  
     try:
       fig = fig_list[ randint(0, len(fig_list) ) ]
     except:
       fig = ''
     return fig
 
-if __name__ == "__main__":
-    db = AsciiFig()
-    for i in range(20):
-      score = 100 - i
-      print( db.pick_fig( score ) )
+#if __name__ == "__main__":
+#    db = AsciiFig()
+#    for i in range(20):
+#      score = 100 - i
+#      print( db.pick_fig( score ) )
 
