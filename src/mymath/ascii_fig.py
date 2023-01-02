@@ -1,10 +1,32 @@
 import matplotlib.pyplot as plt
 from random import randint
-from ascii_animals import ASCII_ANIMALS
+import mymath.ascii_data.animals
+import mymath.ascii_data.star_wars
+import mymath.ascii_data.harry_potter
+#from ascii_animals import ASCII_ANIMALS
+
+
+def get_db( theme:str ):
+#  theme = self.theme_list[ input_theme_index ]
+  if theme == "animals":
+    db = mymath.ascii_data.animals.db
+  elif theme == "star wars":
+    db = mymath.ascii_data.star_wars.db
+  elif theme == "Harry Potter":
+    db = mymath.ascii_data.harry_potter.db
+  elif theme in [ "none", None ] :
+    db = None
+  if db == None:
+    return None
+  elif isinstance( db, list ) :
+    return AsciiFig( db=db )
+  else:
+    print( f"WARNING: unable to interpret {theme} for ascii db. \n"\
+           f"Theme must be in 'animals', 'star wars', 'Harry Potter'") 
 
 class AsciiFig:
 
-  def __init__(self, db=ASCII_ANIMALS, max_width=None, max_height=None):
+  def __init__(self, db=mymath.ascii_data.animals.db, max_width=None, max_height=None):
     self.db = db
     self.max_width = max_width
     self.max_height = max_height
@@ -64,7 +86,7 @@ class AsciiFig:
 #        if meta[ 'score' ] == fig_score:
 #          fig_list.append( self.db[ meta[ 'db_index' ] ] )  
     try:
-      fig = fig_list[ randint(0, len(fig_list) ) ]
+      fig = self.db[ randint(0, len( self.db ) ) ]
     except:
       fig = ''
     return fig

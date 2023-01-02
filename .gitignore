@@ -1,0 +1,18 @@
+__pycache__/
+.ipynb_checkpoints/
+.pylintrc
+*.py[cod]
+*$py.class
+
+# file with confidential information that should not be pushed to the git
+examples/conf.py
+examples/cache
+
+
+# temporary vim files
+*.swp
+*.swo
+
+# Sphinx documentation
+
+
