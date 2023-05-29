@@ -9,9 +9,9 @@ from picotui.defs import *
 #from ascii_harry_potter import ASCII_HARRY_POTTER
 #from ascii_fig import AsciiFig
 from random import randint 
-import mymath.challenge
+import smileymath.challenge
 
-class MyMathTUI:
+class SmileyMathTUI:
   
   def __init__( self ):
     param_width = 7 # size of the box containing configuration par maters
@@ -126,7 +126,7 @@ class MyMathTUI:
       d = Dialog(5, 5, tui_width, 16)
     
       line = 1
-      d.add( 1, line, "Welcome to MyMath!" )
+      d.add( 1, line, "Welcome to Smiley Math!" )
       line += 2
       d.add( 1, line, WFrame( tui_width - 2, len( self.challenge_set_list ) + 3, "Please select Today's practice" ) )
       line += 2
@@ -184,35 +184,35 @@ class MyMathTUI:
                'timeout' : timeout }
       if training[ 'text' ] == "Addition" :
         args[ 'x' ] = user_range
-        mymath.challenge.AdditionSet( **args )
+        smileymath.challenge.AdditionSet( **args )
       elif training[ 'text' ] == "Complement to 10" :
         del args[ 'x' ]
         del args[ 'y' ]
-        mymath.challenge.ComplementTo10Set( **args )
+        smileymath.challenge.ComplementTo10Set( **args )
       elif training[ 'text' ] == "Subtraction" :
         args[ 'x' ] = user_range
-        mymath.challenge.SubtractionSet( **args )
+        smileymath.challenge.SubtractionSet( **args )
       elif training[ 'text' ] == "Mult. Table [X] x [0-10]" :
-        mymath.challenge.MultiplicationSet( **args )
+        smileymath.challenge.MultiplicationSet( **args )
       elif training[ 'text' ] == "Mult. [X] x [X]" :
         args[ 'x' ] = user_range
-        mymath.challenge.MultiplicationSet( **args )
+        smileymath.challenge.MultiplicationSet( **args )
       elif training[ 'text' ] == "Division [X]**2 / [X]" :
         args[ 'x' ] = user_range
-        mymath.challenge.DivisionSet( **args )
+        smileymath.challenge.DivisionSet( **args )
       elif training[ 'text' ] == "Euclidean Division [X]**2 / [X]" :
         args[ 'x' ] = user_range
         args[ 'y' ] = [ user_range[ 0 ]**2, user_range[ 1 ]**2 ]   
-        mymath.challenge.DivisionWithRemainderSet( **args )
+        smileymath.challenge.DivisionWithRemainderSet( **args )
       elif training[ 'text' ] == "Adding Time":
         del args[ 'x' ]
         del args[ 'y' ]
-        mymath.challenge.HourMinuteAdditionSet( **args )
+        smileymath.challenge.HourMinuteAdditionSet( **args )
       elif training[ 'text' ] == "Subtracting Time": 
         del args[ 'x' ]
         del args[ 'y' ]
-        mymath.challenge.HourMinuteSubstractionSet( **args )
+        smileymath.challenge.HourMinuteSubstractionSet( **args )
 
 if __name__ == '__main__' :
-  MyMathTUI()
+  SmileyMathTUI()
 

@@ -1,0 +1,19 @@
+#!/usr/bin/python3
+
+import sys 
+sys.path.insert(0, './../src/')
+import smileymath.challenge
+
+challenge_nbr = 20
+args = { 'y' : [ 0, 20], 'x' : [ 0, 20 ], 'challenge_nbr' : challenge_nbr, \
+         'ascii_fig' : "animals", 'timeout' : 7 }
+smileymath.challenge.AdditionSet( **args )
+smileymath.challenge.ComplementTo10Set(  **args )
+smileymath.challenge.SubtractionSet( **args )
+
+args = { 'y' : [ 0, 3 ], 'x' : [ 0, 10 ], 'challenge_nbr' : challenge_nbr, \
+         'ascii_fig' : "star wars", 'timeout' : 5 }
+smileymath.challenge.MultiplicationSet( **args )
+
+
+

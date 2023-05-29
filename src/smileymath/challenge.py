@@ -9,8 +9,8 @@ from math import ceil
 #import sys.stdout
 from inputimeout import inputimeout, TimeoutOccurred
 import pynput
-import mymath.user_input
-import mymath.ascii_fig
+import smileymath.user_input
+import smileymath.ascii_fig
 
 class Challenge:
   def __init__( self, question:str, answer:str, 
@@ -39,7 +39,7 @@ class Challenge:
 
   def get_user_resp( self ):
     """ collects the end user input """
-    user_response = mymath.user_input.UserInput( timeout=self.timeout )
+    user_response = smileymath.user_input.UserInput( timeout=self.timeout )
     self.user_resp = user_response.get_user_input( )
 
   def evaluate_user_resp( self ):
@@ -69,7 +69,7 @@ class IntChallenge( Challenge ):
     super().__init__( question, answer, index=index, timeout=timeout)
 
   def get_user_resp( self ):
-    user_response = mymath.user_input.IntUserInput( timeout=self.timeout )
+    user_response = smileymath.user_input.IntUserInput( timeout=self.timeout )
     self.user_resp = user_response.get_user_input( )
 
 class DoubleIntChallenge( Challenge ):
@@ -80,7 +80,7 @@ class DoubleIntChallenge( Challenge ):
     super().__init__( question, answer, index=index, timeout=timeout)
 
   def get_user_resp( self ):
-    user_response = mymath.user_input.DoubleIntUserInput( timeout=self.timeout )
+    user_response = smileymath.user_input.DoubleIntUserInput( timeout=self.timeout )
     self.user_resp = user_response.get_user_input( )
 
 class HourMinuteChallenge( Challenge ):
@@ -95,7 +95,7 @@ class HourMinuteChallenge( Challenge ):
     super().__init__( question, answer, index=index, timeout=timeout)
 
   def get_user_resp( self ):
-    user_response = mymathmymath.user_input.HourMinuteDateTimeUserInput( \
+    user_response = smileymath.user_input.HourMinuteDateTimeUserInput( \
                       timeout=self.timeout )
     self.user_resp = user_response.get_user_input( )
 
@@ -117,7 +117,7 @@ class AdditionSet:
     self.kwargs = kwargs
     self.challenge_nbr = challenge_nbr
     self.timeout = timeout
-    self.ascii_fig = mymath.ascii_fig.get_db( ascii_fig )
+    self.ascii_fig = smileymath.ascii_fig.get_db( ascii_fig )
     self.welcome( )
     ## building challenges
     self.score = 0
@@ -130,7 +130,7 @@ class AdditionSet:
       self.time += challenge.time
       if challenge.score == 0:
         self.missed_challenge_list.append( challenge )
-    self.score /= challenge_nbr * 100.0
+    self.score = self.score / challenge_nbr * 100.0
     self.time /= challenge_nbr
     self.finalize()
 
@@ -176,7 +176,7 @@ class AdditionSet:
       for challenge in self.missed_challenge_list:
         while challenge.score == 0:
           challenge.ask()
-      print("Super! Your score was %s%% and is now 100%%!"%ceil(self.score))
+      print( f"Super! Your score was {ceil(self.score)}%% and is now 100%%!")
 
     print("Your mean response time is: %.2f"%self.time )
     if self.ascii_fig != None:

@@ -2,13 +2,7 @@ from pynput import keyboard
 import signal
 import time
 import datetime
-
-DEBUG = False
-
-def debug( function, message ):
-  """tools used for debugging """
-  if DEBUG is True:
-    print( f"DEBUG: {function} : {message}")
+import logging
 
 class Timeout():
   """Timeout class using ALARM signal"""
@@ -59,6 +53,20 @@ class UserInput:
     self.input_key_list = []
     self.timeout = timeout
     self.end_of_input = end_of_input
+    self.log = self.init_log( )
+
+  def init_log( self ):
+    log_file = './mymath.log'
+    logger = logging.getLogger( __name__ )
+    FORMAT = "[%(asctime)s : %(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
+    logger.setLevel( logging.DEBUG )
+    logging.basicConfig(filename=log_file, format=FORMAT )
+    return logger
+
+#  def debug( self, function, message ):
+#    """tools used for debugging """
+#    if self.debug_state is True:
+#      self.log.debug( f"DEBUG: {function} : {message}")
 
   def get_user_input( self ):
     """ starts a keyboard listener and get user input """
@@ -82,29 +90,39 @@ class UserInput:
     listener.stop()
     try: 
       input_value = self.format_input( self.get_input_string( ) )
-      debug( "get_user_input", f"input_value (str) : {input_value}" )
+#      self.log.debug( "get_user_input", f"input_value ({type( input_value )}) : {input_value}" )
+      self.log.debug( f"formatted input_value ({type( input_value )}) : {input_value}" )
     except Exception as e:
 #      pass
 #      print("")
-      debug( "get_user_input", f"Error while formating {type(e)}:{e}" )
+      self.log.debug( f"Error while formating {type(e)}:{e}" )
+#      self.debug( "get_user_input", f"Error while formating {type(e)}:{e}" )
       
     return input_value
 
   def get_input_string( self ):
     """reads the input provided """
   
-    debug( "get_input_string", f"self.input_key_list: {self.input_key_list}" )
+#    self.debug( "get_input_string", f"self.input_key_list: {self.input_key_list}" )
+    self.log.debug( f"input_key_list: {self.input_key_list}" )
     string = ""
     for k in self.input_key_list:
       ## not all keys have a "char attribute"
       try: 
+        ## we realized that the key 5 from the numeric pad was not
+        ## displayed correctly.
+        ## The bug has been reported below.
+        ## https://github.com/moses-palmer/pynput/issues/530
+        if k.vk == 65437 :
+          string += '5'
         string += k.char
       ## AttributeError is for keys without 'char'
       ## TypeError is for None
       except (AttributeError, TypeError):
         if k == keyboard.Key.space:
           string += ' '
-    debug( "get_input_string", f"string: {string.strip()}" )
+#    self.debug( "get_input_string", f"string: {string.strip()}" )
+    self.log.debug( f"input_string (from input_key_list): {string.strip()}" )
     return string.strip()
   
   def format_input( self, input_string:str ):
@@ -131,7 +149,8 @@ class UserInput:
       self.format_input( input_string ) 
       return True
     except Exception as e :
-      debug( "check_format", f"Error {type(e)} while formating {input_string}" ) 
+#      self.debug( "check_format", f"Error {type(e)} while formating {input_string}" ) 
+      self.log.debug( f"Error {type(e)} while formating {input_string}" ) 
       return False
   
   
@@ -144,6 +163,15 @@ class UserInput:
     It is worth noting that when a char results from the combination 
     of multiple keys 'like shift + char' key.char is properly displayed.  
     """
+#    ## special key to enable debugging
+#    ## during a session
+#    if key == keyboard.Key.esc:
+#      self.debug_state = not self.debug_state 
+    ## we do print the pressed character as we noticed that with USB keyboard
+    ## some specific key are not caught by the user_input (while being printed)
+    ## In our case the number '5' is not considered by the num pad and is hardly 
+    ## consider on the main part of the keyboard. 
+    self.log.debug( f"pressed_key: {key}" )
     ## key representing a char
     if hasattr( key, 'char'):
       self.input_key_list.append( key )
@@ -182,7 +210,8 @@ class UserInput:
     We currenlty do not implement any specific action
     When the function returns False, the listener is stoped.
     """
-    pass
+    self.log.debug( f"released_key: {key}" )
+    
 
 class IntUserInput ( UserInput ):
 
@@ -191,6 +220,8 @@ class IntUserInput ( UserInput ):
 
   def format_input( self, input_string ):
     return int( input_string.strip() )
+#    self.log.debug( f"formatted_input: {formatted_input}" )
+#    return formatted_input
 
 class DoubleIntUserInput( UserInput ):
   """ inputs consists of two int separated by a space 
@@ -214,6 +245,8 @@ class DoubleIntUserInput( UserInput ):
     elif len( split_input_string )  != 2:
       raise ValueError( f"unexpected len for input_string" )
     return tuple( [ int( i.strip() ) for i in split_input_string ] )
+#    self.log.debug( f"formatted_input: {formatted_input}" )
+#    return formatted_input
 
 class HourMinuteDateTimeUserInput( UserInput ):
 
