@@ -279,6 +279,7 @@ class DivisionWithRemainderSet( AdditionSet ):
     M = max( [ x, y ] )
     d = int( M / m )
     r = M - d * m
+#    print( f"m: {m}, M: {M}, d:{d}, r:{r}" )
 #    print( f"get_challenge: {( d, r )} {type(d)}/{type(r)}" ) 
     return DoubleIntChallenge( f"{M} / {m} = ", ( d, r ),\
            index=index, timeout=self.timeout  ) 
