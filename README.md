@@ -1,4 +1,4 @@
-This module has been designed for kids to practice elementary math operation. 
+ This module has been designed for kids to practice elementary math operation. 
 The tool is quite minimalist and the only gadget is the printing of an ascii art picture from one of the following theme: animals, star wars, Harry Potter.
 
 The current the challenges categories are:
